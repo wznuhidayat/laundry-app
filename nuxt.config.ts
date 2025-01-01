@@ -18,6 +18,7 @@ export default defineNuxtConfig({
   modules: [
     // Menambahkan Pinia module
     '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt'
   ],
   runtimeConfig: {
     public: {
