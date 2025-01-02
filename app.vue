@@ -2,7 +2,7 @@
 
 </script>
 <template>
-  <div data-theme="cmyk">
+  <div data-theme="nord">
     <AppHeader />
     <NuxtPage/>
   </div>

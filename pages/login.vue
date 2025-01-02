@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '~/stores/auth';
+import { useToastStore } from '~/stores/toast';
+const toast = useToastStore();
 
 const authStore = useAuthStore();
 const email = ref('');
@@ -14,11 +16,18 @@ const handleLogin = async () => {
     navigateTo('/dashboard'); // Redirect setelah login
   } catch (err) {
     error.value = err.body || 'Invalid credentials';
+    toast.showToast(error, 'error');
   }
 };
 </script>
 <template>
-  <div class="grid grid-cols-12 h-screen items-center px-6">
+  <div class="grid grid-cols-12 h-screen items-center">
+    <div class="col-span-12 hidden md:flex md:col-span-6 items-end bg-primary h-screen p-10">
+      <div class="max-h-sm space-y-4">
+        <h1 class="text-5xl font-bold  text-white">Laundry APP</h1>
+        <p class="text-white text-xl font-semibold">Quick, Easy, and Reliable Laundry Service – Your Fresh Clothes Are Just a Click Away!</p>
+      </div>
+    </div>
     <div class="col-span-12 md:col-span-6">
       <div class="max-w-sm mx-auto">
         <h2 class="text-4xl font-bold">Login</h2>
@@ -51,20 +60,7 @@ const handleLogin = async () => {
           />
         </div>
         <div>
-          <div role="alert" class="alert bg-red-400 p-2  flex" v-if="error">
-            <svg @click="error = ''"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 shrink-0 stroke-current"
-              fill="none"
-              viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>{{ error }}</span>
-          </div>
+          
         </div>
         <button
           class="btn btn-primary btn-block "
@@ -74,12 +70,7 @@ const handleLogin = async () => {
         </button>
       </form>
     </div>
-    <div class="hidden md:flex col-span-6 items-center bg-primary h-screen px-6">
-      <div class="max-w-sm">
-        <h1 class="text-4xl font-bold  text-white">Laundry APP</h1>
-        <p class="text-white font-semibold">Quick, Easy, and Reliable Laundry Service – Your Fresh Clothes Are Just a Click Away!</p>
-      </div>
-    </div>
   </div>
+  <ToastAlert />
 </template>
   
