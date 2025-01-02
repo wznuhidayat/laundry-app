@@ -10,9 +10,10 @@ console.log('loaded')
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-full">
       <!-- Sidebar -->
       <Sidebar />
-
+      <!-- Navbar -->
       <!-- Main Content -->
       <div class="col-span-3 space-y-6">
+        <Navbar />
         <slot /> <!-- Tempat untuk konten halaman -->
       </div>
     </div>

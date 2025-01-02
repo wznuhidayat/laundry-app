@@ -15,11 +15,8 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: [
-    // Menambahkan Pinia module
-    '@pinia/nuxt',
-    'pinia-plugin-persistedstate/nuxt'
-  ],
+  modules: [// Menambahkan Pinia module
+  '@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt', '@nuxt/icon', '@nuxt/icon'],
   runtimeConfig: {
     public: {
       apiBase: 'http://localhost:3333', // Sesuaikan dengan URL Adonis API Anda
