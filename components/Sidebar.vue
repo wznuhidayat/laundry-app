@@ -1,6 +1,9 @@
 <script setup>
 import { Icon } from '@iconify/vue';
-
+const isDropdownOpen = ref(false);
+function toggleDropdown() {
+  isDropdownOpen.value = !isDropdownOpen.value;
+}
 </script>
 
 <template>
@@ -9,50 +12,73 @@ import { Icon } from '@iconify/vue';
       <h2 class="text-2xl font-bold text-left text-slate-100">Laundry App</h2>
     </div>
     <ul class="mt-6 ">
-      <li class="hover:bg-secondary card p-4">
-        <nuxt-link to="/dashboard" class="text-slate-100 font-bold flex items-center">
+      <li>
+        <nuxt-link to="/dashboard" class="hover:bg-secondary card p-4 text-slate-100 font-bold flex-row"
+          :class="{ 'bg-secondary': $route.path === '/dashboard' }">
           <Icon icon="material-symbols:dashboard" class="mr-2 h-5 w-5" /> Dashboard
         </nuxt-link>
       </li>
-      <li class="hover:bg-secondary card p-4">
-        <nuxt-link to="/orders" class="text-slate-100 font-bold flex items-center">
+      <li>
+        <nuxt-link to="/orders" class="hover:bg-secondary card p-4 text-slate-100 font-bold flex-row"
+          :class="{ 'bg-secondary': $route.path === '/orders' }">
           <Icon icon="material-symbols:inactive-order" class="mr-2 h-5 w-5" /> Orders
-        </nuxt-link> 
+        </nuxt-link>
       </li>
-      <li class="hover:bg-secondary card p-4">
-        <nuxt-link to="/order-history" class="text-slate-100 font-bold flex items-center">
-        <Icon icon="material-symbols:order-approve" class="mr-2 h-5 w-5" /> 
-        Order History</nuxt-link>
-       </li>
-       <li class="hover:bg-secondary card p-4">
-        <nuxt-link to="/dashboard" class="text-slate-100 font-bold flex items-center">
+      <li class="">
+        <nuxt-link to="/order-history" class="hover:bg-secondary card p-4 text-slate-100 font-bold flex-row"
+          :class="{ 'bg-secondary': $route.path === '/order-history' }">
+          <Icon icon="material-symbols:order-approve" class="mr-2 h-5 w-5" />
+          Order History
+        </nuxt-link>
+      </li>
+      <li>
+        <div class="hover:bg-secondary card p-4 text-slate-100 font-bold flex-row cursor-pointer"
+          :class="{ 'bg-secondary': $route.path.startsWith('/master') }" @click="toggleDropdown">
           <Icon icon="ic:baseline-menu-book" class="mr-2 h-5 w-5" />
           Master
-        </nuxt-link>
+        </div>
         <!-- Submenu Master -->
-        <ul class="ml-6 mt-2">
-          <li class="hover:bg-secondary card p-4">
-            <nuxt-link to="/products" class="text-slate-100 font-bold flex items-center">
-              <Icon icon="ic:baseline-production-quantity-limits" class="mr-2 h-5 w-5" />
-              Products
+        <!-- open sub menu if master url -->
+        <ul v-if="$route.path.startsWith('/master') ? !isDropdownOpen : isDropdownOpen" class="ml-6">
+          <li class="card p-4 text-slate-300">
+            <nuxt-link to="/master/services" class=" hover:text-slate-100 font-bold flex items-center"
+              :class="{ 'text-slate-100': $route.path === '/master/services' }">
+              <Icon icon="ic:baseline-wash" class="mr-2 h-5 w-5" />
+              Services
             </nuxt-link>
           </li>
-          <li class="hover:bg-secondary card p-4">
-            <nuxt-link to="/services" class="text-slate-100 font-bold flex items-center">
-              <Icon icon="ic:baseline-design-services" class="mr-2 h-5 w-5" />
-              Services
+          <li class="card p-4 text-slate-300">
+            <nuxt-link to="/master/discounts" class=" hover:text-slate-100 font-bold flex items-center"
+              :class="{ 'text-slate-100': $route.path === '/master/discounts' }">
+              <Icon icon="ic:baseline-discount" class="mr-2 h-5 w-5" />
+              Discounts
+            </nuxt-link>
+          </li>
+          <li class="card p-4 text-slate-300">
+            <nuxt-link to="/master/deliveries" class=" hover:text-slate-100 font-bold flex items-center"
+              :class="{ 'text-slate-100': $route.path === '/master/deliveries' }">
+              <Icon icon="ic:baseline-delivery-dining" class="mr-2 h-5 w-5" />
+              Deliveries
+            </nuxt-link>
+          </li>
+          <li class="card p-4 text-slate-300">
+            <nuxt-link to="/master/parfumes" class=" hover:text-slate-100 font-bold flex items-center"
+              :class="{ 'text-slate-100': $route.path === '/master/parfumes' }">
+              <Icon icon="ic:baseline-wine-bar" class="mr-2 h-5 w-5" />
+              Parfumes
             </nuxt-link>
           </li>
         </ul>
       </li>
-      <li class="hover:bg-secondary card p-4">
+      <li>
         <nuxt-link to="/customers"
-          class="text-slate-100 font-bold flex items-center">
+          class="hover:bg-secondary card p-4 text-slate-100 font-bold flex items-center flex-row"
+          :class="{ 'bg-secondary': $route.path === '/customers' }">
           <Icon icon="ic:baseline-supervisor-account" class="mr-2 h-5 w-5" />
           Customers
-        </nuxt-link> 
+        </nuxt-link>
       </li>
-      
+
     </ul>
   </div>
 </template>
