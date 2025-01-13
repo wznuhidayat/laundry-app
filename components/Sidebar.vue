@@ -7,7 +7,7 @@ function toggleDropdown() {
 </script>
 
 <template>
-  <div class="col-span-1 bg-primary p-4 card shadow-lg">
+  <div class="col-span-3 bg-primary p-4 card shadow-lg">
     <div class="sidebar-head py-4 px-4">
       <h2 class="text-2xl font-bold text-left text-slate-100">Laundry App</h2>
     </div>
