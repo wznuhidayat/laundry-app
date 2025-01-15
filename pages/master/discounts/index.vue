@@ -2,13 +2,21 @@
 definePageMeta({
   layout: 'admin'
 })
+import { computed } from 'vue';
+import Pagination from '@/components/Pagination.vue';
 import { Icon } from '@iconify/vue';
 import { useDiscountStore } from '~/stores/discount';
 const discountStore = useDiscountStore();
 
-onMounted(async () => {
-    await discountStore.fetchDiscounts();
-})
+await useFetch(() => discountStore.fetchDiscounts());
+const currentPage = computed(() => discountStore.page);
+const total = computed(() => discountStore.total);
+const perPage = computed(() => discountStore.perPage);
+const discounts = computed(() => discountStore.discounts);
+const handlePageChange = (page) => {
+  discountStore.setPage(page);
+};
+
 
 const deleteDiscount = async (id: number) => {
   try {
@@ -18,6 +26,7 @@ const deleteDiscount = async (id: number) => {
     toast.showToast(error, 'error');
   }
 }
+const no = ref(1);
 </script>
 <template>
     <NuxtLayout name="admin">
@@ -40,8 +49,8 @@ const deleteDiscount = async (id: number) => {
                         </thead>
                         <tbody>
                         <!-- row 1 -->
-                        <tr v-for="discount in discountStore.discounts">
-                            <th>1</th>
+                        <tr v-for="(discount, index) in discounts" :key="discount.id">
+                            <th>{{ index + 1 + (currentPage - 1) * perPage }}</th>
                             <td>{{ discount.type }}</td>
                             <td>{{ discount.value }}</td>
                             <td>
@@ -56,6 +65,12 @@ const deleteDiscount = async (id: number) => {
                         </tbody>
                     </table>
                 </div>
+                <Pagination
+                  :currentPage="currentPage"
+                  :totalItems="total"
+                  :itemsPerPage="perPage"
+                  @pageChange="handlePageChange"
+                />
             </div>
         </div>
     </NuxtLayout>
