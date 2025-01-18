@@ -34,13 +34,13 @@ const logout = async () => {
                 <ul tabindex="0"
                     class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                     <li>
-                        <a class="justify-between">
+                        <a class="justify-between p-3">
                             Profile
                             <span class="badge">New</span>
                         </a>
                     </li>
-                    <li><a>Settings</a></li>
-                    <li><a href="javascript:void(0)" @click="logout">Logout</a></li>
+                    <li><a class=" p-3">Settings</a></li>
+                    <li><a class=" p-3" href="javascript:void(0)" @click="logout">Logout</a></li>
                 </ul>
             </div>
         </div>
