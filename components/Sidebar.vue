@@ -16,18 +16,18 @@ function toggleDropdown() {
         </div>
         <!-- Sidebar content here -->
         <li>
-          <nuxt-link to="/dashboard" class="text-slate-100 card p-3 font-bold flex-row"
+          <nuxt-link to="/dashboard" class="text-slate-100 card p-4 font-bold flex-row"
             :class="{ 'active': $route.path === '/dashboard' }">
             <Icon icon="material-symbols:dashboard" class="mr-2 h-5 w-5" /> Dashboard
           </nuxt-link>
         </li>
-        <li><nuxt-link to="/orders" class="text-slate-100 card p-3 font-bold flex-row"
+        <li><nuxt-link to="/orders" class="text-slate-100 card p-4 font-bold flex-row"
             :class="{ 'active': $route.path === '/orders' }">
             <Icon icon="material-symbols:inactive-order" class="mr-2 h-5 w-5" /> Orders
           </nuxt-link>
         </li>
         <li>
-          <nuxt-link to="/order-history" class="card p-3 text-slate-100 font-bold flex-row"
+          <nuxt-link to="/order-history" class="card p-4 text-slate-100 font-bold flex-row"
             :class="{ 'active': $route.path === '/order-history' }">
             <Icon icon="material-symbols:order-approve" class="mr-2 h-5 w-5" />
             Order History
@@ -35,7 +35,7 @@ function toggleDropdown() {
         </li>
         <li>
           <nuxt-link to="/customers"
-            class="card p-3 text-slate-100 font-bold flex items-center flex-row"
+            class="card p-4 text-slate-100 font-bold flex items-center flex-row"
             :class="{ 'active': $route.path === '/customers' }">
             <Icon icon="ic:baseline-supervisor-account" class="mr-2 h-5 w-5" />
             Customers
@@ -43,7 +43,7 @@ function toggleDropdown() {
         </li>
         <!-- <div class="py-4"><label class="px-3 text-xs text-slate-300 uppercase dark:text-gray-400">master</label></div> -->
         <li>
-          <div class="card p-3 text-slate-100 font-bold flex flex-row justify-between cursor-pointer"
+          <div class="card p-4 text-slate-100 font-bold flex flex-row justify-between cursor-pointer"
             @click="toggleDropdown">
             <div class="flex space-x-2">
               <Icon icon="ic:baseline-menu-book" class="mr-4 h-5 w-5" />
@@ -55,25 +55,25 @@ function toggleDropdown() {
           <!-- open sub menu if master url -->
           <ul v-if="$route.path.startsWith('/master') ? !isDropdownOpen : isDropdownOpen" class="menu ml-6">
             <li >
-              <nuxt-link to="/master/services" class="card p-3 text-slate-100 font-bold"
+              <nuxt-link to="/master/services" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path === '/master/services' }">
                 Services
               </nuxt-link>
             </li>
             <li >
-              <nuxt-link to="/master/discounts" class="card p-3 text-slate-100 font-bold"
+              <nuxt-link to="/master/discounts" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path === '/master/discounts' }">
                 Discounts
               </nuxt-link>
             </li>
             <li >
-              <nuxt-link to="/master/deliveries" class="card p-3 text-slate-100 font-bold"
+              <nuxt-link to="/master/deliveries" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path === '/master/deliveries' }">
                 Deliveries
               </nuxt-link>
             </li>
             <li >
-              <nuxt-link to="/master/parfumes" class="card p-3 text-slate-100 font-bold"
+              <nuxt-link to="/master/parfumes" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path === '/master/parfumes' }">
                 Parfumes
               </nuxt-link>

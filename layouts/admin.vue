@@ -8,6 +8,8 @@ function toggleDropdown() {
   isDropdownOpen.value = !isDropdownOpen.value;
 }
 
+
+
 </script>
 
 <template>
@@ -21,7 +23,9 @@ function toggleDropdown() {
           <slot />
         </div>
       </div>
+      
       <ToastAlert />
+    
     </div>
     <Sidebar />
   </div>

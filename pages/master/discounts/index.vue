@@ -2,7 +2,7 @@
 definePageMeta({
   layout: 'admin'
 })
-import { computed } from 'vue';
+import { ref,computed } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 import { Icon } from '@iconify/vue';
 import { useDiscountStore } from '~/stores/discount';
@@ -18,15 +18,29 @@ const handlePageChange = (page) => {
 };
 
 
-const deleteDiscount = async (id: number) => {
+const deleteDiscount = (id: number) => {
+  isConfirmDelete.value = true;
+  idCurrentDelete.value = id
+}
+const no = ref(1);
+const idCurrentDelete = ref(0);
+const isConfirmDelete = ref(false);
+
+const handleConfirm = async () => {
+  const id = idCurrentDelete.value
   try {
     await discountStore.deleteDiscount(id);
     await discountStore.fetchDiscounts();
+    isConfirmDelete.value = false
   } catch (error) {
     toast.showToast(error, 'error');
   }
+};
+
+const handleClose = () => {
+  isConfirmDelete.value = false;
 }
-const no = ref(1);
+
 </script>
 <template>
     <NuxtLayout name="admin">
@@ -55,7 +69,7 @@ const no = ref(1);
                             <td>{{ discount.value }}</td>
                             <td>
                             <!-- Button delete -->
-                            <button class="btn btn-sm btn-error" @click="deleteDiscount(discount.id)">
+                            <button class="btn btn-sm btn-error text-slate-100" @click="deleteDiscount(discount.id)">
                                 <Icon icon="material-symbols:delete" class="h-5 w-5" /> 
                             </button>
                             </td>
@@ -72,6 +86,17 @@ const no = ref(1);
                   @pageChange="handlePageChange"
                 />
             </div>
+            <ModalDialog
+        :isOpen="isConfirmDelete"
+        title="Delete Item"
+        message="Are you sure you want to delete this item? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        confirmClass="btn-error text-white"
+        @confirm="handleConfirm"
+        @cancel="handleClose"
+      />
         </div>
+        
     </NuxtLayout>
 </template>
