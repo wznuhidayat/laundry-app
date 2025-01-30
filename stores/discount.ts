@@ -36,7 +36,7 @@ export const useDiscountStore = defineStore('discount', {
                 return await axios.post(`${config.public.apiBase}/discount`, discount);
             } catch (error) {
                 const toast = useToastStore();
-                toast.showToast(error.response.data.messages[0].message, 'error');
+                return error.response.data;
             }
         },
         async deleteDiscount(id) {
@@ -50,9 +50,32 @@ export const useDiscountStore = defineStore('discount', {
                 toast.showToast(error.response.data.messages[0].message, 'error');
             }
         },
+        async showDiscount(id) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const data = await axios.get(`${config.public.apiBase}/discount/${id}`);
+                return data.data.discount;
+            } catch (error) {
+                const toast = useToastStore();
+                return error.response.data;
+            }
+        },
         async setPage(page) {
             this.page = page;
             await this.fetchDiscounts();
         },
+        async updateDiscount(id, discount) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                return await axios.put(`${config.public.apiBase}/discount/${id}`, discount);
+            } catch (error) {
+                const toast = useToastStore();
+                return error.response.data;
+            }
+        }
     },
 });

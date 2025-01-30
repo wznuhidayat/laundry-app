@@ -1,13 +1,9 @@
-<script setup lang="ts">
-definePageMeta({
-    layout: 'admin'
-})
-import { useToastStore } from '~/stores/toast';
-const toast = useToastStore();
-import { reactive } from 'vue';
+<script setup>
 import { useDiscountStore } from '~/stores/discount';
+import { customRound } from '~/utils/rounding';
 const discountStore = useDiscountStore();
-
+const id = useRoute().params.id
+const toast = useToastStore();
 const form = reactive({
     type: '',
     value: '',
@@ -17,12 +13,22 @@ const errors = reactive({
     type: '',
     value: '',
 })
-
-const handleSubmit = async () => {
+const fetchItem = async () => {
   try {
-    const res = await discountStore.createDiscount(form);
+    const data = await discountStore.showDiscount(id);
+    form.type = data.type;
+    form.value = customRound(data.value);
+  } catch (error) {
+    console.error('Error fetching item:', error);
+  }
+};
+await fetchItem();
+const handleSubmit = async (id) => {
+  try {
+    const res = await discountStore.updateDiscount(id, form);
     if(res){
-        if(res.status == 201){
+        if(res.status == 200){
+            toast.showToast('Discount successfully updated!', 'success');
             navigateTo('/master/discounts');
         }else if(res.status == 422){
             errors.type = ''
@@ -43,8 +49,8 @@ const handleSubmit = async () => {
     <NuxtLayout name="admin">
         <div class="card bg-base-100">
             <div class="card-body">
-                <h1 class="card-title">Create Discount</h1>
-                <form @submit.prevent="handleSubmit" class=" space-y-4">
+                <h1 class="card-title">Edit Discount</h1>
+                <form @submit.prevent="handleSubmit(id)" class=" space-y-4">
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
                             <span class="label-text">Type</span>

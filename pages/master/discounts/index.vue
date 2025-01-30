@@ -2,11 +2,13 @@
 definePageMeta({
   layout: 'admin'
 })
+import { customRound } from '~/utils/rounding';
 import { ref,computed } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 import { Icon } from '@iconify/vue';
 import { useDiscountStore } from '~/stores/discount';
 const discountStore = useDiscountStore();
+const toast = useToastStore();
 
 await useFetch(() => discountStore.fetchDiscounts());
 const currentPage = computed(() => discountStore.page);
@@ -31,7 +33,8 @@ const handleConfirm = async () => {
   try {
     await discountStore.deleteDiscount(id);
     await discountStore.fetchDiscounts();
-    isConfirmDelete.value = false
+    toast.showToast('Discount successfully deleted!', 'success');
+    isConfirmDelete.value = false;
   } catch (error) {
     toast.showToast(error, 'error');
   }
@@ -48,17 +51,17 @@ const handleClose = () => {
             <div class="card-body">
                 <div class="flex justify-between">
                   <h1 class="card-title">Discounts</h1>
-                  <nuxt-link to="/master/discounts/create" class="btn btn-primary">Create</nuxt-link>
+                  <nuxt-link to="/master/discounts/create" class="btn btn-primary text-white font-bold">Create</nuxt-link>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="table table-zebra">
                         <!-- head -->   
                         <thead>
                         <tr>
-                            <th >No</th>
+                            <th width="5%">No</th>
                             <th>Type</th>
                             <th>Value</th>
-                            <th>Action</th>
+                            <th width="15%">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -66,12 +69,17 @@ const handleClose = () => {
                         <tr v-for="(discount, index) in discounts" :key="discount.id">
                             <th>{{ index + 1 + (currentPage - 1) * perPage }}</th>
                             <td>{{ discount.type }}</td>
-                            <td>{{ discount.value }}</td>
-                            <td>
+                            <td>{{ customRound(discount.value) }}</td>
+                            <td class="space-x-2">
+                              <!-- Button Edit -->
+                            <nuxt-link :to="`/master/discounts/${discount.id}`" class="btn btn-sm btn-info text-slate-100">
+                                <Icon icon="material-symbols:edit" class="h-5 w-5" /> 
+                            </nuxt-link>
                             <!-- Button delete -->
                             <button class="btn btn-sm btn-error text-slate-100" @click="deleteDiscount(discount.id)">
                                 <Icon icon="material-symbols:delete" class="h-5 w-5" /> 
                             </button>
+                            
                             </td>
                         </tr>
                         

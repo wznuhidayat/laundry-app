@@ -56,25 +56,25 @@ function toggleDropdown() {
           <ul v-if="$route.path.startsWith('/master') ? !isDropdownOpen : isDropdownOpen" class="menu ml-6">
             <li >
               <nuxt-link to="/master/services" class="card p-4 text-slate-100 font-bold"
-                :class="{ 'active ': $route.path === '/master/services' }">
+                :class="{ 'active ': $route.path.startsWith('/master/services') }">
                 Services
               </nuxt-link>
             </li>
             <li >
               <nuxt-link to="/master/discounts" class="card p-4 text-slate-100 font-bold"
-                :class="{ 'active ': $route.path === '/master/discounts' }">
+                :class="{ 'active ': $route.path.startsWith('/master/discounts') }">
                 Discounts
               </nuxt-link>
             </li>
             <li >
               <nuxt-link to="/master/deliveries" class="card p-4 text-slate-100 font-bold"
-                :class="{ 'active ': $route.path === '/master/deliveries' }">
+                :class="{ 'active ': $route.path.startsWith('/master/deliveries') }">
                 Deliveries
               </nuxt-link>
             </li>
             <li >
               <nuxt-link to="/master/parfumes" class="card p-4 text-slate-100 font-bold"
-                :class="{ 'active ': $route.path === '/master/parfumes' }">
+                :class="{ 'active ': $route.path.startsWith('/master/parfumes') }">
                 Parfumes
               </nuxt-link>
             </li>
