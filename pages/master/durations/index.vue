@@ -2,37 +2,34 @@
 definePageMeta({
   layout: 'admin'
 })
-import { customRound } from '~/utils/rounding';
+import { Icon } from '@iconify/vue';
 import { ref,computed } from 'vue';
 import Pagination from '@/components/Pagination.vue';
-import { Icon } from '@iconify/vue';
-import { useDiscountStore } from '~/stores/discount';
-const discountStore = useDiscountStore();
+import { useDurationStore } from '~/stores/duration';
+const durationStore = useDurationStore();
 const toast = useToastStore();
+await useFetch(() => durationStore.fetchDurations());
+const currentPage = computed(() => durationStore.page);
+const total = computed(() => durationStore.total);
+const perPage = computed(() => durationStore.perPage);
+const durations = computed(() => durationStore.durations);
 
-await useFetch(() => discountStore.fetchDiscounts());
-const currentPage = computed(() => discountStore.page);
-const total = computed(() => discountStore.total);
-const perPage = computed(() => discountStore.perPage);
-const discounts = computed(() => discountStore.discounts);
-const handlePageChange = (page) => {
-  discountStore.setPage(page);
-};
-
-
-const deleteDiscount = (id: number) => {
+const deleteDuration = (id: number) => {
   isConfirmDelete.value = true;
   idCurrentDelete.value = id
 }
 const idCurrentDelete = ref(0);
 const isConfirmDelete = ref(false);
+const handlePageChange = (page) => {
+  durationStore.setPage(page);
+};
 
 const handleConfirm = async () => {
   const id = idCurrentDelete.value
   try {
-    await discountStore.deleteDiscount(id);
-    await discountStore.fetchDiscounts();
-    toast.showToast('Discount successfully deleted!', 'success');
+    await durationStore.deleteDuration(id);
+    await durationStore.fetchDurations();
+    toast.showToast('Duration successfully deleted!', 'success');
     isConfirmDelete.value = false;
   } catch (error) {
     toast.showToast(error, 'error');
@@ -42,15 +39,14 @@ const handleConfirm = async () => {
 const handleClose = () => {
   isConfirmDelete.value = false;
 }
-
 </script>
 <template>
     <NuxtLayout name="admin">
-        <div class="card bg-base-100">
+      <div class="card bg-base-100">
             <div class="card-body">
                 <div class="flex justify-between">
-                  <h1 class="card-title">Discounts</h1>
-                  <nuxt-link to="/master/discounts/create" class="btn btn-primary text-white font-bold">Create</nuxt-link>
+                  <h1 class="card-title">Durations</h1>
+                  <nuxt-link to="/master/durations/create" class="btn btn-primary text-white font-bold">Create</nuxt-link>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="table table-zebra">
@@ -58,24 +54,24 @@ const handleClose = () => {
                         <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th>Type</th>
-                            <th>Value</th>
+                            <th>Name</th>
+                            <th>Long Duration</th>
                             <th width="15%">Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <!-- row 1 -->
-                        <tr v-for="(discount, index) in discounts" :key="discount.id">
+                        <tr v-for="(duration, index) in durations" :key="duration.id">
                             <th>{{ index + 1 + (currentPage - 1) * perPage }}</th>
-                            <td>{{ discount.type }}</td>
-                            <td>{{ customRound(discount.value) }}</td>
+                            <td>{{ duration.name }}</td>
+                            <td>{{ duration.longDuration }}</td>
                             <td class="space-x-2">
                               <!-- Button Edit -->
-                            <nuxt-link :to="`/master/discounts/${discount.id}`" class="btn btn-sm btn-info text-slate-100">
+                            <nuxt-link :to="`/master/durations/${duration.id}`" class="btn btn-sm btn-info text-slate-100">
                                 <Icon icon="material-symbols:edit" class="h-5 w-5" /> 
                             </nuxt-link>
                             <!-- Button delete -->
-                            <button class="btn btn-sm btn-error text-slate-100" @click="deleteDiscount(discount.id)">
+                            <button class="btn btn-sm btn-error text-slate-100" @click="deleteDuration(duration.id)">
                                 <Icon icon="material-symbols:delete" class="h-5 w-5" /> 
                             </button>
                             
@@ -104,6 +100,5 @@ const handleClose = () => {
         @cancel="handleClose"
       />
         </div>
-        
     </NuxtLayout>
 </template>

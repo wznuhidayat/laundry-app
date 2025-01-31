@@ -61,6 +61,12 @@ function toggleDropdown() {
               </nuxt-link>
             </li>
             <li >
+              <nuxt-link to="/master/durations" class="card p-4 text-slate-100 font-bold"
+                :class="{ 'active ': $route.path.startsWith('/master/durations') }">
+                Duration
+              </nuxt-link>
+            </li>
+            <li >
               <nuxt-link to="/master/discounts" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path.startsWith('/master/discounts') }">
                 Discounts
