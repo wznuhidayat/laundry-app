@@ -1,39 +1,39 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
-export const useDurationStore = defineStore('duration', {
+export const useDeliverStore = defineStore('deliver', {
     state: () => ({
-        durations: [],
+        delivers: [],
         page: 1,
         perPage: 10,
         total: 0,
     }),
     actions: {
-        async fetchDurations() {
+        async fetchDelivers() {
             try {
                 const config = useRuntimeConfig();
                 const authStore = useAuthStore();
                 axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
-                const response = await axios.get(`${config.public.apiBase}/duration`,{
+                const response = await axios.get(`${config.public.apiBase}/delivery`,{
                     params: {
                         page: this.page,
                         perPage: this.perPage,
                     }
                 });
-                this.durations = response.data.data;
+                this.delivers = response.data.data;
                 this.page = response.data.meta.currentPage;
                 this.perPage = response.data.meta.perPage;
                 this.total = response.data.meta.total;
             } catch (error) {
-                console.error('Error fetching durations:', error);
+                console.error('Error fetching delivers:', error);
             }
         },
-        async createDuration(duration) {
+        async createDeliver(delivery) {
             try {
                 const config = useRuntimeConfig();
                 const authStore = useAuthStore();
                 axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
-                return await axios.post(`${config.public.apiBase}/duration`, duration);
+                return await axios.post(`${config.public.apiBase}/delivery`, delivery);
             } catch (error) {
                 const toast = useToastStore();
                 return error.response.data;
@@ -41,37 +41,38 @@ export const useDurationStore = defineStore('duration', {
         },  
         async setPage(page) {
             this.page = page;
-            await this.fetchDurations();
+            await this.fetchDelivers();
         },
-        async deleteDuration(id) {
+        async deleteDeliver(id) {
             try {
                 const config = useRuntimeConfig();
                 const authStore = useAuthStore();
                 axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
-                return await axios.delete(`${config.public.apiBase}/duration/${id}`);
+                return await axios.delete(`${config.public.apiBase}/delivery/${id}`);
             } catch (error) {
                 const toast = useToastStore();
                 toast.showToast(error.response.data.messages[0].message, 'error');
             }
         },
-        async showDuration(id) {
+        async showDeliver(id) {
             try {
                 const config = useRuntimeConfig();
                 const authStore = useAuthStore();
                 axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
-                const data = await axios.get(`${config.public.apiBase}/duration/${id}`);
-                return data.data.duration;
+                const data = await axios.get(`${config.public.apiBase}/delivery/${id}`);
+                return data.data.delivery;
             } catch (error) {
                 const toast = useToastStore();
                 return error.response.data;
             }
         },
-        async updateDuration(id, duration) {
+        async updateDelivery(id, delivery) {
             try {
                 const config = useRuntimeConfig();
                 const authStore = useAuthStore();
                 axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
-                return await axios.put(`${config.public.apiBase}/duration/${id}`, duration);
+                console.log(delivery)
+                return await axios.put(`${config.public.apiBase}/delivery/${id}`, delivery);
             } catch (error) {
                 const toast = useToastStore();
                 return error.response.data;
