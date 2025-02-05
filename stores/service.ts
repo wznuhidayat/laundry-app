@@ -20,7 +20,6 @@ export const useServiceStore = defineStore('service', {
                         perPage: this.perPage,
                     }
                 });
-                console.log(response.data.data)
                 this.services = response.data.data;
                 this.page = response.data.meta.currentPage;
                 this.perPage = response.data.meta.perPage;
@@ -39,7 +38,44 @@ export const useServiceStore = defineStore('service', {
                 const toast = useToastStore();
                 return error.response.data;
             }
-        },  
-        
+        }, 
+        async setPage(page) {
+            this.page = page;
+            await this.fetchServices();
+        }, 
+        async showService(id) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const data = await axios.get(`${config.public.apiBase}/service/${id}`);
+                return data.data.service;
+            } catch (error) {
+                const toast = useToastStore();
+                return error.response.data;
+            }
+        },
+        async deleteService(id) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                return await axios.delete(`${config.public.apiBase}/service/${id}`);
+            } catch (error) {
+                const toast = useToastStore();
+                toast.showToast(error.response.data.messages[0].message, 'error');
+            }
+        },
+        async updateService(id, service) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                return await axios.put(`${config.public.apiBase}/service/${id}`, service);
+            } catch (error) {
+                const toast = useToastStore();
+                return error.response.data;
+            }
+        },
     },
 });

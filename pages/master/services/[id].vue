@@ -1,21 +1,18 @@
-<script setup lang="ts">
-definePageMeta({
-    layout: 'admin'
-})
+<script setup>
+const durations = ref([]);
 import { useToastStore } from '~/stores/toast';
 const toast = useToastStore();
 import { reactive } from 'vue';
 import { useServiceStore } from '~/stores/service';
 import { useDurationStore } from '~/stores/duration';
 const DurationStore = useDurationStore();
-
 const serviceStore = useServiceStore();
-const durations = ref([]);
+const id = useRoute().params.id
 
-onMounted(async () => {
+const fetchDurations = async () => {
     durations.value = await DurationStore.getAllDurations();
-})
-
+}
+fetchDurations();
 const form = reactive({
     name: '',
     type: '',
@@ -29,18 +26,26 @@ const errors = reactive({
     duration_id: '',
     price: '',
 })
-
-const handleSubmit = async () => {
+const fetchItem = async () => {
   try {
-    const res = await serviceStore.createService(form);
+    const data = await serviceStore.showService(id);
+    form.name = data.name;
+    form.type = data.type;
+    form.duration_id = data.durationId;
+    form.price = customRound(data.price);
+  } catch (error) {
+    console.error('Error fetching item:', error);
+  }
+};
+await fetchItem();
+const handleSubmit = async (id) => {
+  try {
+    const res = await serviceStore.updateService(id, form);
     if(res){
-        if(res.status == 201){
+        if(res.status == 200){
+            toast.showToast('Service successfully updated!', 'success');
             navigateTo('/master/services');
         }else if(res.status == 422){
-            errors.name = ''
-            errors.type = ''
-            errors.duration_id = ''
-            errors.price = ''
             res.messages.forEach(error => {
                 if (errors.hasOwnProperty(error.field)) {
                     errors[error.field] = error.message
@@ -58,7 +63,7 @@ const handleSubmit = async () => {
         <div class="card bg-base-100">
             <div class="card-body">
                 <h1 class="card-title">Create Service</h1>
-                <form @submit.prevent="handleSubmit" class=" space-y-4">
+                <form @submit.prevent="handleSubmit(id)" class=" space-y-4">
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
                             <span class="label-text">Name</span>
@@ -74,7 +79,7 @@ const handleSubmit = async () => {
                         </div>
                         <select v-model="form.type" class="select select-bordered " :class="{ 'select-error': errors.type }">
                             <option disabled selected>-- select one --</option>
-                            <option value="item">Item</option>
+                            <option value="item" >Item</option>
                             <option value="weight">Weight</option>
                             <option value="length">Length</option>
                         </select>
@@ -88,7 +93,7 @@ const handleSubmit = async () => {
                         </div>
                         <select v-model="form.duration_id" class="select select-bordered " :class="{ 'select-error': errors.duration_id }">
                             <option disabled selected>-- select one --</option>
-                            <option v-for="duration in durations" :key="duration.id" :value="duration.id">{{ duration.name }}</option>
+                            <option v-for="duration in durations" :key="duration.id" :value="duration.id" >{{ duration.name }}</option>
                         </select>
                         <div v-if="errors.duration_id" class="label">
                             <span class="label-text-alt text-error">{{ errors.duration_id }}</span>

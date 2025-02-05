@@ -71,12 +71,12 @@ export const useDeliverStore = defineStore('deliver', {
                 const config = useRuntimeConfig();
                 const authStore = useAuthStore();
                 axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
-                console.log(delivery)
                 return await axios.put(`${config.public.apiBase}/delivery/${id}`, delivery);
             } catch (error) {
                 const toast = useToastStore();
                 return error.response.data;
             }
         },
+        
     },
 });

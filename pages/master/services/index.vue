@@ -6,6 +6,8 @@ import { Icon } from '@iconify/vue';
 import { useServiceStore } from '~/stores/service';
 const serviceStore = useServiceStore();
 await useFetch(() => serviceStore.fetchServices());
+const toast = useToastStore();
+
 const currentPage = computed(() => serviceStore.page);
 const total = computed(() => serviceStore.total);
 const perPage = computed(() => serviceStore.perPage);
@@ -13,6 +15,27 @@ const services = computed(() => serviceStore.services);
 const handlePageChange = (page) => {
   serviceStore.setPage(page);
 };
+const deleteService = (id: number) => {
+  isConfirmDelete.value = true;
+  idCurrentDelete.value = id
+}
+const handleConfirm = async () => {
+  const id = idCurrentDelete.value
+  try {
+    await serviceStore.deleteService(id);
+    await serviceStore.fetchServices();
+    toast.showToast('Duration successfully deleted!', 'success');
+    isConfirmDelete.value = false;
+  } catch (error) {
+    toast.showToast(error, 'error');
+  }
+};
+const idCurrentDelete = ref(0);
+const isConfirmDelete = ref(false);
+const handleClose = () => {
+  isConfirmDelete.value = false;
+}
+
 </script>
 <template>
     <NuxtLayout name="admin">
@@ -60,14 +83,14 @@ const handlePageChange = (page) => {
                         </tbody>
                     </table>
                 </div>
-                <!-- <Pagination
+                <Pagination
                   :currentPage="currentPage"
                   :totalItems="total"
                   :itemsPerPage="perPage"
                   @pageChange="handlePageChange"
-                /> -->
+                />
             </div>
-            <!-- <ModalDialog
+            <ModalDialog
         :isOpen="isConfirmDelete"
         title="Delete Item"
         message="Are you sure you want to delete this item? This action cannot be undone."
@@ -76,7 +99,7 @@ const handlePageChange = (page) => {
         confirmClass="btn-error text-white"
         @confirm="handleConfirm"
         @cancel="handleClose"
-      /> -->
+      />
         </div>
     </NuxtLayout>
 </template>

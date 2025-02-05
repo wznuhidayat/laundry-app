@@ -77,5 +77,17 @@ export const useDurationStore = defineStore('duration', {
                 return error.response.data;
             }
         },
+        async getAllDurations() {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const response = await axios.get(`${config.public.apiBase}/duration/getAll`);
+                return response.data.durations;
+            } catch (error) {
+                const toast = useToastStore();
+                return error.response.data;
+            }
+        },
     },
 });
