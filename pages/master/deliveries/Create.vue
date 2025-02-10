@@ -56,9 +56,9 @@ const handleSubmit = async () => {
                     </label>
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">Long Deliver</span>
+                            <span class="label-text">Price</span>
                         </div>
-                        <input name="text" placeholder="long deliver" v-model="form.price" class="input input-bordered w-full max-w-xs" :class="{ 'input-error': errors.price }" />
+                        <input name="text" placeholder="price" v-model="form.price" class="input input-bordered w-full max-w-xs" :class="{ 'input-error': errors.price }" />
                         <div v-if="errors.price" class="label">
                             <span class="label-text-alt text-error">{{ errors.price }}</span>
                         </div>
