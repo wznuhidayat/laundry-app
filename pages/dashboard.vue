@@ -6,11 +6,10 @@ definePageMeta({
 
 <template>
   <NuxtLayout name="admin">
-    <div class="card bg-white shadow-sm p-6">
+    <div class="card bg-white shadow-sm p-6 mb-4">
       <h3 class="text-2xl font-semibold">Overview</h3>
       <p class="text-gray-500">This is an overview section of the dashboard.</p>
     </div>
-    
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="card bg-white shadow-sm p-6">
         <h3 class="text-xl font-semibold">Order</h3>
