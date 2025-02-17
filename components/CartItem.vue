@@ -1,22 +1,41 @@
 <script setup>
+const props = defineProps(['item']);
+import { Icon } from '@iconify/vue';    
+const computedPrice = computed(() => {
+    return props.item.price * props.item.qty;
+})
+const emit = defineEmits(['removeFromCart','increase', 'decrease']);
+
+const removeItem = () => {
+  emit('removeFromCart', props.item.id);
+}
+const increaseQty = () => {
+  emit('increase', props.item.id);
+};
+
+const decreaseQty = () => {
+  if (props.item.qty > 1) {
+    emit('decrease', props.item.id);
+  }
+};
 </script>
 
 <template>
-    <div class="group hover:bg-base-300 rounded-lg p-2 cursor-pointer transition duration-300 ease-in-out">
+    <div class="group relative hover:bg-base-100/50 rounded-lg cursor-pointer transition duration-300 ease-in-out">
         <div class="flex gap-2 ">
             <div class="avatar relative">
                 <div class="w-10 h-10 rounded-xl">
                     <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                 </div>
                 <div class="bg-neutral opacity-50 group-hover:opacity-100 absolute text-neutral-content rounded-lg w-10 transition delay-100 duration-300 ease-in-out">
-                    <div class="text-3xl flex items-center justify-center h-full w-full font-bold">1</div>
+                    <div class="text-3xl flex items-center justify-center h-full w-full font-bold">{{ item.qty }}</div>
                 </div>
             </div>
             <div class="flex justify-between w-full gap-8">
                 <div class="">
-                    <p class="text-sm font-semibold line-clamp-2">Laundry Fast Version with extra parfume lor</p>
+                    <p class="text-sm font-semibold line-clamp-2">{{ item.name }}</p>
                 </div>
-                <div class="font-bold text-sm flex items-center">$200</div>
+                <div class="font-bold text-sm flex items-center">{{ computedPrice }}</div>
             </div>
         </div>
         <div class="hidden group-hover:flex justify-between mt-2 gap-2">
@@ -27,11 +46,15 @@
                     <option>Greedo</option>
                 </select>
             </div>
-            <div class="flex gap-2">
-                <div class="btn btn-circle btn-sm">-</div>
-                <div class="btn btn-circle btn-sm">1</div>
-                <div class="btn btn-circle btn-sm">+</div>
-            </div>
+                <div class="flex gap-2">
+                    <div class="btn btn-circle btn-sm" v-if="item.qty == 1" @click="removeItem"><Icon icon="ic:twotone-remove-shopping-cart" class="w-5 h-5 text-red-500"></Icon></div>
+                    <div class="btn btn-circle btn-sm" v-if="item.qty > 1" @click="decreaseQty">-</div>
+                    <div class="btn btn-circle btn-sm">{{ item.qty }}</div>
+                    <div class="btn btn-circle btn-sm" @click="increaseQty">+</div>
+                </div>
+        </div>
+        <div class="absolute top-5 -left-2 z-50">
+            
         </div>
     </div>
 </template>

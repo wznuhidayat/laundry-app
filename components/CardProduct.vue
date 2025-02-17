@@ -1,5 +1,22 @@
 <script setup>
 const props = defineProps(['service'])
+const emit = defineEmits(['addToCart'])
+
+const addToCart = () => {
+    emit('addToCart', props.service, qty.value)
+}
+
+const qty = ref(1);
+
+const increaseQty = () => {
+    qty.value++;
+}
+
+const decreaseQty = () => {
+    if (qty.value > 1) {
+        qty.value--;
+    }
+}
 </script>
 
 <template>
@@ -21,11 +38,11 @@ const props = defineProps(['service'])
                 </div>
                 <div class="flex justify-between w-full">
                     <div class="flex gap-2">
-                        <div class="btn btn-circle btn-sm">-</div>
-                        <div class="btn btn-circle btn-sm">1</div>
-                        <div class="btn btn-circle btn-sm">+</div>
+                        <div class="btn btn-circle btn-sm" @click="decreaseQty">-</div>
+                        <div class="btn btn-circle btn-sm">{{ qty }}</div>
+                        <div class="btn btn-circle btn-sm" @click="increaseQty">+</div>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-sm">Add</button>
+                    <button type="button" class="btn btn-secondary btn-sm" @click="addToCart">Add</button>
                 </div>
             </div>
         </div>
