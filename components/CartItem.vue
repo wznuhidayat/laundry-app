@@ -1,23 +1,20 @@
 <script setup>
 const props = defineProps(['item']);
 import { Icon } from '@iconify/vue';    
+import { useCartStore } from '#build/imports';
+import { usePerfumeStore } from '#build/imports';
+const cartStore = useCartStore();
+const perfumeStore = usePerfumeStore();
 const computedPrice = computed(() => {
     return props.item.price * props.item.qty;
 })
-const emit = defineEmits(['removeFromCart','increase', 'decrease']);
+const parfumeId = ref(null);
 
-const removeItem = () => {
-  emit('removeFromCart', props.item.id);
-}
-const increaseQty = () => {
-  emit('increase', props.item.id);
-};
+watch(parfumeId, (newValue) => {
+    cartStore.setParfumeId(props.item.id, newValue);
+})
 
-const decreaseQty = () => {
-  if (props.item.qty > 1) {
-    emit('decrease', props.item.id);
-  }
-};
+await useFetch(() => perfumeStore.fetchPerfumes());
 </script>
 
 <template>
@@ -40,17 +37,16 @@ const decreaseQty = () => {
         </div>
         <div class="hidden group-hover:flex justify-between mt-2 gap-2">
             <div class="flex-grow">
-                <select class="select select-sm select-bordered w-full max-w-xs">
+                <select class="select select-sm select-bordered w-full max-w-xs" v-model="parfumeId">
                     <option disabled selected>Select perfume</option>
-                    <option>Han Solo</option>
-                    <option>Greedo</option>
+                    <option v-for="perfume in perfumeStore.perfumes" :key="perfume.id" :value="perfume.id">{{ perfume.name }}</option>
                 </select>
             </div>
                 <div class="flex gap-2">
-                    <div class="btn btn-circle btn-sm" v-if="item.qty == 1" @click="removeItem"><Icon icon="ic:twotone-remove-shopping-cart" class="w-5 h-5 text-red-500"></Icon></div>
-                    <div class="btn btn-circle btn-sm" v-if="item.qty > 1" @click="decreaseQty">-</div>
-                    <div class="btn btn-circle btn-sm">{{ item.qty }}</div>
-                    <div class="btn btn-circle btn-sm" @click="increaseQty">+</div>
+                    <div class="btn btn-circle btn-sm" v-if="item.qty == 1" @click="cartStore.removeItem(item.id)"><Icon icon="ic:twotone-remove-shopping-cart" class="w-5 h-5 text-red-500"></Icon></div>
+                    <div class="btn btn-circle btn-sm" v-if="item.qty > 1" @click="cartStore.decreaseQty(item.id)">-</div>
+                    <div class="btn btn-circle btn-sm">{{ cartStore.getQty(item.id) }}</div>
+                    <div class="btn btn-circle btn-sm" @click="cartStore.increaseQty(item.id)">+</div>
                 </div>
         </div>
         <div class="absolute top-5 -left-2 z-50">

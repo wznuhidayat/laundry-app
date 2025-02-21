@@ -1,10 +1,10 @@
 <script setup>
+import { useCartStore } from '#build/imports'
+
 const props = defineProps(['service'])
 const emit = defineEmits(['addToCart'])
 
-const addToCart = () => {
-    emit('addToCart', props.service, qty.value)
-}
+const cartStore = useCartStore();
 
 const qty = ref(1);
 
@@ -42,7 +42,7 @@ const decreaseQty = () => {
                         <div class="btn btn-circle btn-sm">{{ qty }}</div>
                         <div class="btn btn-circle btn-sm" @click="increaseQty">+</div>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-sm" @click="addToCart">Add</button>
+                    <button type="button" class="btn btn-secondary btn-sm" @click="cartStore.addToCart(service, qty)">Add</button>
                 </div>
             </div>
         </div>
