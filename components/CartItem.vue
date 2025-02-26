@@ -32,7 +32,7 @@ await useFetch(() => perfumeStore.fetchPerfumes());
                 <div class="">
                     <p class="text-sm font-semibold line-clamp-2">{{ item.name }}</p>
                 </div>
-                <div class="font-bold text-sm flex items-center">{{ computedPrice }}</div>
+                <div class="font-bold text-sm flex items-center">{{ currency(computedPrice) }}</div>
             </div>
         </div>
         <div class="hidden group-hover:flex justify-between mt-2 gap-2">

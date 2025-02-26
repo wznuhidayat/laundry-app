@@ -83,7 +83,7 @@ const removeFromCart = (id) => {
               <ul class="space-y-2">
                 <li class="flex justify-between">
                   <span>Subtotal</span>
-                  <span>{{ cartStore.subtotal }}</span>
+                  <span>{{ currency(cartStore.subtotal) }}</span>
                 </li>
                 <li class="grid grid-cols-12">
                   <div class="col-span-8 group transition duration-300 ease-in-out">
@@ -93,7 +93,7 @@ const removeFromCart = (id) => {
                           <option v-for="deliver in delivers" :key="deliver.id" :value="deliver.id" :data-price="deliver.price">{{ deliver.name }}</option>
                       </select>
                     </div>
-                    <div class="col-span-4 flex items-center justify-end">{{ cartStore.totalShipping }}</div>
+                    <div class="col-span-4 flex items-center justify-end">{{ currency(cartStore.totalShipping) }}</div>
                 </li>
                 <li class="grid grid-cols-12">
                   <div class="col-span-8 group transition duration-300 ease-in-out">
@@ -103,11 +103,11 @@ const removeFromCart = (id) => {
                         <option v-for="discount in discounts" :key="discount.id" :value="discount.id" :data-type="discount.type" :data-value="discount.value">{{ discountLabel(discount.type, discount.value) }}</option>
                     </select>
                   </div>
-                  <div class="col-span-4 flex items-center justify-end">{{ cartStore.totalDiscount }}</div>
+                  <div class="col-span-4 flex items-center justify-end">{{ currency(cartStore.totalDiscount) }}</div>
                 </li>
                 <li class="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>{{ cartStore.total }}</span>
+                  <span>{{ currency(cartStore.total) }}</span>
                 </li>
               </ul>
             </div>

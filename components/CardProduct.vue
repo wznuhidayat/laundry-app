@@ -33,7 +33,7 @@ const decreaseQty = () => {
                 </div>
                 <div class="w-full">
                     <span class="italic line-clamp-1 w-full">
-                        {{ customRound(service.price) }}
+                        {{ currency(service.price) }}
                     </span>
                 </div>
                 <div class="flex justify-between w-full">
