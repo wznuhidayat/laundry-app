@@ -20,10 +20,10 @@ const decreaseQty = () => {
 </script>
 
 <template>
-    <div class="card h-40 bg-base-100 hover:bg-base-100/70 p-4 shadow-sm ">
-        <div class="flex h-full gap-4">
-            <figure class="h-full w-1/3 border border-base-300 border-dashed rounded-lg">
-                <img src="/public/tshirt.png" class="h-full object-contain scale-75 rounded-lg" alt="Shoes">
+    <div class="card bg-base-100 hover:bg-base-100/70 p-4 shadow-sm">
+        <div class="flex gap-4">
+            <figure class="w-1/3 border border-base-300 border-dashed rounded-lg">
+                <img src="/public/tshirt.png" class="object-contain scale-75 rounded-lg" alt="Shoes">
             </figure>
             <div class="w-2/3 py-2 space-y-2 flex flex-col justify-between ">
                 <div class="w-full ">

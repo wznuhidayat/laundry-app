@@ -64,8 +64,10 @@ const removeFromCart = (id) => {
 <template>
   <NuxtLayout name="admin">
     <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-9 grid grid-cols-3 gap-4">
-        <CardProduct v-for="service in services" :key="service.id" :service="service" />
+      <div class="col-span-9 ">
+        <div class="max-h-[calc(100vh-8rem)] grid grid-cols-3 gap-4 overflow-y-auto w-full">
+          <CardProduct v-for="service in services" :key="service.id" :service="service" />
+        </div>
       </div>
       <div class="col-span-3">
         <div class="card bg-base-100 h-[calc(100vh-8rem)]">
