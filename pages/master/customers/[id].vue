@@ -1,22 +1,25 @@
 <script setup>
-import { useDurationStore } from '~/stores/duration';
-const durationStore = useDurationStore();
+import { useCustomerStore } from '~/stores/customer';
+const customerStore = useCustomerStore();
 const id = useRoute().params.id
 const toast = useToastStore();
 const form = reactive({
     name: '',
-    long_duration: '',
+    phone: '',
+    address: '',
 });
 
 const errors = reactive({
     name: '',
-    long_duration: '',
+    phone: '',
+    address: '',
 })
 const fetchItem = async () => {
   try {
-    const data = await durationStore.showDuration(id);
+    const data = await customerStore.showCustomer(id);
     form.name = data.name;
-    form.long_duration = data.longDuration;
+    form.phone = data.phone;
+    form.address = data.address;
   } catch (error) {
     console.error('Error fetching item:', error);
   }
@@ -24,14 +27,15 @@ const fetchItem = async () => {
 await fetchItem();
 const handleSubmit = async (id) => {
   try {
-    const res = await durationStore.updateDuration(id, form);
+    const res = await customerStore.updateCustomer(id, form);
     if(res){
         if(res.status == 200){
-            toast.showToast('Duration successfully updated!', 'success');
-            navigateTo('/master/durations');
+            toast.showToast('Customer successfully updated!', 'success');
+            navigateTo('/master/customers');
         }else if(res.status == 422){
             errors.name = ''
-            errors.long_duration = ''
+            errors.phone = ''
+            errors.address = ''
             res.messages.forEach(error => {
                 if (errors.hasOwnProperty(error.field)) {
                     errors[error.field] = error.message
@@ -48,7 +52,7 @@ const handleSubmit = async (id) => {
     <NuxtLayout name="admin">
         <div class="card bg-base-100">
             <div class="card-body">
-                <h1 class="card-title">Edit Duration</h1>
+                <h1 class="card-title">Edit Customer</h1>
                 <form @submit.prevent="handleSubmit(id)" class=" space-y-4">
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
@@ -61,11 +65,20 @@ const handleSubmit = async (id) => {
                     </label>
                     <label class="form-control w-full max-w-xs">
                         <div class="label">
-                            <span class="label-text">Long Duration</span>
+                            <span class="label-text">Phone</span>
                         </div>
-                        <input type="text" placeholder="long duration" v-model="form.long_duration" class="input input-bordered w-full max-w-xs" :class="{ 'input-error': errors.long_duration }" />
-                        <div v-if="errors.long_duration" class="label">
-                            <span class="label-text-alt text-error">{{ errors.long_duration }}</span>
+                        <input type="text" placeholder="0854 xxx" v-model="form.phone" class="input input-bordered w-full max-w-xs" :class="{ 'input-error': errors.phone }" />
+                        <div v-if="errors.phone" class="label">
+                            <span class="label-text-alt text-error">{{ errors.phone }}</span>
+                        </div>
+                    </label>
+                    <label class="form-control w-full max-w-xs">
+                        <div class="label">
+                            <span class="label-text">Address</span>
+                        </div>
+                        <textarea name="text" placeholder="address" v-model="form.address" class="textarea input-bordered w-full max-w-xs" :class="{ 'input-error': errors.address }" id=""></textarea>
+                        <div v-if="errors.address" class="label">
+                            <span class="label-text-alt text-error">{{ errors.address }}</span>
                         </div>
                     </label>
                     <div class="card-actions">

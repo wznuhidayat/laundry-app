@@ -33,14 +33,6 @@ function toggleDropdown() {
             Order History
           </nuxt-link>
         </li>
-        <li>
-          <nuxt-link to="/customers"
-            class="card p-4 text-slate-100 font-bold flex items-center flex-row"
-            :class="{ 'active': $route.path === '/customers' }">
-            <Icon icon="ic:baseline-supervisor-account" class="mr-2 h-5 w-5" />
-            Customers
-          </nuxt-link>
-        </li>
         <!-- <div class="py-4"><label class="px-3 text-xs text-slate-300 uppercase dark:text-gray-400">master</label></div> -->
         <li>
           <div class="card p-4 text-slate-100 font-bold flex flex-row justify-between cursor-pointer"
@@ -82,6 +74,12 @@ function toggleDropdown() {
               <nuxt-link to="/master/perfumes" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path.startsWith('/master/perfumes') }">
                 Perfumes
+              </nuxt-link>
+            </li>
+            <li >
+              <nuxt-link to="/master/customers" class="card p-4 text-slate-100 font-bold"
+                :class="{ 'active ': $route.path.startsWith('/master/customers') }">
+                Customers
               </nuxt-link>
             </li>
           </ul>
