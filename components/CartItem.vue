@@ -14,7 +14,7 @@ watch(parfumeId, (newValue) => {
     cartStore.setParfumeId(props.item.id, newValue);
 })
 
-await useFetch(() => perfumeStore.fetchPerfumes());
+useFetch(() => perfumeStore.fetchPerfumes());
 </script>
 
 <template>

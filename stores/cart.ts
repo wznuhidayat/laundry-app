@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
+import { useToastStore } from '~/stores/toast';
 import axios from 'axios';
-
+// 
 export const useCartStore = defineStore('cart', {
     state: () => ({
         cart: [],
@@ -8,6 +9,7 @@ export const useCartStore = defineStore('cart', {
         totalShipping: 0,
         discount: null,
         totalDiscount: 0,
+        customer: null,
     }),
     actions: {
         addToCart(item, qty) {
@@ -57,6 +59,15 @@ export const useCartStore = defineStore('cart', {
             const item = this.cart.find(i => i.id === id);
             if (item) {
                 item.parfumeId = parfumeId;
+            }
+        },
+        setCustomer(customer) {
+            this.customer = customer;
+        },
+        checkout(){
+            if(this.cart.length == 0){
+                const toast = useToastStore();
+                toast.showToast("Please add item to cart", 'error')
             }
         }
     },

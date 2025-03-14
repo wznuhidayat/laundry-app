@@ -7,6 +7,7 @@ export const useCustomerStore = defineStore('customer', {
         page: 1,
         perPage: 10,
         total: 0,
+        searchResults: [],
     }),
     actions: {
         async fetchCustomers() {
@@ -77,6 +78,20 @@ export const useCustomerStore = defineStore('customer', {
                 return error.response.data;
             }
         },
-        
+        async searchCustomers(search) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const response = await axios.get(`${config.public.apiBase}/customer-search`, {
+                    params: {
+                        query: search,
+                    }
+                });
+                this.searchResults = response.data.customers;
+            } catch (error) {
+                console.error('Error searching customers:', error);
+            }
+        },
     },
 });

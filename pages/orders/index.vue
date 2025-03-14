@@ -20,15 +20,10 @@ const delivers = computed(() => deliverStore.delivers);
 await useFetch(() => discountStore.fetchDiscounts());
 const discounts = computed(() => discountStore.discounts);
 const cartStore = useCartStore();
-const cart = reactive([]);
 
 const selectedShipping = ref(null);
-// const amountShipping = computed(() => {
-//   const selectedDeliver = delivers.value.find(d => d.id == selectedShipping.value);
-//   return selectedDeliver ? selectedDeliver.price : 0;
-// })
 
-const amountDiscount = 0;
+
 watch(selectedShipping, (newValue) => {
   const selectedDeliver = delivers.value.find(deliver => deliver.id === newValue);
   if (selectedDeliver) {
@@ -45,20 +40,12 @@ watch(selectedDiscount, (newValue) => {
   }
 })
 
-
-// const amountDiscount = computed(() => {
-//   const selectedDiscount = discounts.value.find(d => d.id == selectedDiscountId.value);
-//   if(!selectedDiscount) return 0;
-//   if(selectedDiscount.type == 'amount') return selectedDiscount.value;
-//   return totalCart.value * (selectedDiscount.value / 100);
-// });
-const total = 0;
-// const total = computed(() => {
-//   return parseFloat(totalCart.value) - parseFloat(amountDiscount.value) - parseFloat(amountShipping.value)
-// })
-const removeFromCart = (id) => {
-  cart.splice(cart.indexOf(id), 1)
+const modalCheckoutStatus = ref(false);
+const handleCheckout = () => {
+  modalCheckoutStatus.value = true;
+  cartStore.checkout;
 }
+
 </script>
 
 <template>
@@ -111,11 +98,12 @@ const removeFromCart = (id) => {
                 </li>
               </ul>
             </div>
-              <button class="btn btn-primary btn-block font-bold">Checkout</button>
+              <button class="btn btn-primary btn-block font-bold" @click="handleCheckout()">Checkout</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <ModalChekcout :isOpen="modalCheckoutStatus" @cancel="modalCheckoutStatus = false"/>
   </NuxtLayout>
 </template>
