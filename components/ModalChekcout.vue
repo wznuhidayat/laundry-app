@@ -4,6 +4,7 @@ import { Icon } from '@iconify/vue';
 import  { useCustomerStore } from '#build/imports';
 import { useDebounceFn } from '@vueuse/core'
 const customerStore = useCustomerStore();
+const toast = useToastStore();
 const searchQuery = ref('');
 const debouncedSearch = useDebounceFn((query) => {
   if(!query) return
@@ -33,6 +34,16 @@ const props = defineProps({
 });
 const emit = defineEmits(['cancel']);
 
+async function handleSubmit() {
+  const response = await cartStore.submit();
+  if(response.status == 200){
+    toast.showToast('Order successfully submitted!', 'success');
+    emit('cancel');
+  }else{
+    toast.showToast('Order failed to submit!', 'error');
+  }
+}
+
 </script>
 <template>
   <div v-if="isOpen" class="fixed inset-0 z-10 overflow-y-auto bg-slate-900 bg-opacity-50" aria-labelledby="modal-title"
@@ -61,10 +72,8 @@ const emit = defineEmits(['cancel']);
               <ul v-if="customerStore.searchResults.length > 0" class="menu dropdown-content bg-base-100 rounded-lg w-full z-1 p-2 shadow-sm">
                 <li v-for="customer in customerStore.searchResults" :key="customer.id" @click="selectCustomer(customer)">
                   <div class="flex gap-4 px-2">
-                    <div class="avatar">
-                      <div class="w-10 rounded-full">
-                        <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                      </div>
+                    <div class="flex">
+                      <span class="font-bold text-sm">{{ customer.code }}</span>
                     </div>
                     <div class="flex flex-col ">
                       <span class="font-bold text-sm">{{ customer.name }}</span>
@@ -77,7 +86,7 @@ const emit = defineEmits(['cancel']);
             <ul class="list space-y-2">
               <li class="list-row flex justify-between font-semibold text-gray-600">
                 <span>Customer</span>
-                <span>{{ cartStore.customer ? cartStore.customer.name : 'Guest' }}</span>
+                <span >{{ cartStore.customer ?  cartStore.customer.code +' - '+cartStore.customer.name : 'Guest' }}</span>
               </li>
               <li class="list-row flex justify-between font-semibold text-gray-600">
                 <span>Subtotal</span>
@@ -96,7 +105,7 @@ const emit = defineEmits(['cancel']);
         </div>
         <div class="mt-5 grid grid-cols-2 gap-4 card-actions">
           <div class="w-full">
-            <button class="w-full btn btn-primary">Checkout</button>
+            <button class="w-full btn btn-primary" @click="handleSubmit">Checkout</button>
           </div>
           <div class="w-full">
             <button class="w-full btn btn-outline" @click="$emit('cancel')">Cancel</button>

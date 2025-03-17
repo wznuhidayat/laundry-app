@@ -8,9 +8,9 @@ const perfumeStore = usePerfumeStore();
 const computedPrice = computed(() => {
     return props.item.price * props.item.qty;
 })
-const parfumeId = ref(null);
+const perfumeId = ref(null);
 
-watch(parfumeId, (newValue) => {
+watch(perfumeId, (newValue) => {
     cartStore.setParfumeId(props.item.id, newValue);
 })
 
@@ -37,7 +37,7 @@ useFetch(() => perfumeStore.fetchPerfumes());
         </div>
         <div class="hidden group-hover:flex justify-between mt-2 gap-2">
             <div class="flex-grow">
-                <select class="select select-sm select-bordered w-full max-w-xs" v-model="parfumeId">
+                <select class="select select-sm select-bordered w-full max-w-xs" v-model="perfumeId">
                     <option disabled selected>Select perfume</option>
                     <option v-for="perfume in perfumeStore.perfumes" :key="perfume.id" :value="perfume.id">{{ perfume.name }}</option>
                 </select>

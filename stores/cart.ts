@@ -17,7 +17,7 @@ export const useCartStore = defineStore('cart', {
             if (index !== -1) {
                 this.cart[index].qty += qty;
             } else {
-                this.cart.push({ ...item, qty: qty, parfumeId: null });
+                this.cart.push({ ...item, qty: qty, perfumeId: null });
             }
         },
         removeItem(id) {
@@ -55,10 +55,10 @@ export const useCartStore = defineStore('cart', {
             if(discount.type == 'amount') this.totalDiscount = discount.value;
             if(discount.type == 'percentage') this.totalDiscount = this.subtotal * (discount.value / 100);
         },
-        setParfumeId(id, parfumeId) {
+        setParfumeId(id, perfumeId) {
             const item = this.cart.find(i => i.id === id);
             if (item) {
-                item.parfumeId = parfumeId;
+                item.perfumeId = perfumeId;
             }
         },
         setCustomer(customer) {
@@ -68,6 +68,31 @@ export const useCartStore = defineStore('cart', {
             if(this.cart.length == 0){
                 const toast = useToastStore();
                 toast.showToast("Please add item to cart", 'error')
+            }
+        },
+        async submit(){
+            try{
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const payload = {
+                    service_id: this.cart.map(item => item.id),
+                    qty: this.cart.map(item => item.qty),
+                    perfume_id: this.cart.map(item => item.perfumeId),
+                    status: '1',
+                    delivery_id: this.shipping ? this.shipping.id : null,
+                    discount_id: this.discount ? this.discount.id : null,
+                    customer_id: this.customer ? this.customer.id : null
+                }
+                const response = await axios.post(`${config.public.apiBase}/order/checkout`, payload);
+                if(response.status == 200){
+                    this.$reset();
+                };
+                return response;
+            }catch(error){
+                // const toast = useToastStore();
+                console.log(error)
+                // return error.;
             }
         }
     },
