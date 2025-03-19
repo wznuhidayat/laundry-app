@@ -1,4 +1,7 @@
 <script setup>
+definePageMeta({
+  layout: 'admin'
+})
 import { useCustomerStore } from '~/stores/customer';
 const customerStore = useCustomerStore();
 const id = useRoute().params.id

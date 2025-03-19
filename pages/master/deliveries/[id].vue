@@ -1,4 +1,7 @@
 <script setup>
+definePageMeta({
+  layout: 'admin'
+})
 import { useDeliverStore } from '~/stores/delivery';
 import { customRound } from '~/utils/rounding';
 const deliverStore = useDeliverStore();

@@ -7,7 +7,6 @@ import { Icon } from '@iconify/vue';
 import { ref,computed } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 import { usePerfumeStore } from '~/stores/perfume';
-const perfumesStore = usePerfumeStore();
 const toast = useToastStore();
 const perfumeStore = usePerfumeStore();
 await useFetch(() => perfumeStore.fetchPerfumes());

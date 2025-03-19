@@ -23,7 +23,7 @@ function toggleDropdown() {
         </li>
         <li><nuxt-link to="/orders" class="text-slate-100 card p-4 font-bold flex-row"
             :class="{ 'active': $route.path === '/orders' }">
-            <Icon icon="material-symbols:inactive-order" class="mr-2 h-5 w-5" /> Orders
+            <Icon icon="ic:round-shopping-basket" class="mr-2 h-5 w-5" /> Orders
           </nuxt-link>
         </li>
         <li>
