@@ -7,6 +7,8 @@ import { ref,computed } from 'vue';
 import { useDateFormat } from '@vueuse/core'
 import Pagination from '@/components/Pagination.vue';
 import { useOrderStore } from '#build/imports';
+import { useToastStore } from '#build/imports';
+const toast = useToastStore();
 const orderStore = useOrderStore();
 await useFetch(() => orderStore.fetchOrders());
 const currentPage = computed(() => orderStore.page);
@@ -15,12 +17,38 @@ const perPage = computed(() => orderStore.perPage);
 const orders = computed(() => orderStore.orders);
 
 const handlePageChange = (page) => {
-  perfumeStore.setPage(page);
+  orderStore.setPage(page);
+};
+const modalChangeStatus = ref(false);
+const selectedOrder = ref(null);
+const editStatus = (order) => {
+  modalChangeStatus.value = true;
+  selectedOrder.value = order;
+}
+const deleteOrder = (id: number) => {
+  isConfirmDelete.value = true;
+  idCurrentDelete.value = id
+}
+const idCurrentDelete = ref(0);
+const isConfirmDelete = ref(false);
+
+const handleConfirm = async () => {
+  const id = idCurrentDelete.value
+  try {
+    await orderStore.deleteOrder(id);
+    await orderStore.fetchOrders();
+    toast.showToast('Perfume successfully deleted!', 'success');
+    isConfirmDelete.value = false;
+  } catch (error) {
+    toast.showToast(error, 'error');
+  }
 };
 
+const handleClose = () => {
+  isConfirmDelete.value = false;
+}
 const printOrder = (order) => {
   const printWindow = window.open('', '', 'width=800,height=600');
-  console.log(order.date);
   printWindow.document.write(`
     <html>
     <head>
@@ -115,6 +143,13 @@ const printOrder = (order) => {
                                   <button @click="printOrder(order)" class="btn btn-square btn-info">
                                     <Icon icon="ic:baseline-local-printshop" class="h-5 w-5" />
                                   </button>
+                                  <!-- Edit Status -->
+                                  <button @click="editStatus(order)" class="btn btn-square btn-warning">
+                                    <Icon icon="ic:baseline-credit-score" class="h-5 w-5" />
+                                  </button>
+                                  <button class="btn btn-square btn-error" @click="deleteOrder(order.id)">
+                                        <Icon icon="material-symbols:delete" class="h-5 w-5" /> 
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -129,5 +164,16 @@ const printOrder = (order) => {
             </div>
             
         </div>
+        <ModalDialog
+          :isOpen="isConfirmDelete"
+          title="Delete Item"
+          message="Are you sure you want to delete this item? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          confirmClass="btn-error text-white"
+          @confirm="handleConfirm"
+          @cancel="handleClose"
+        />
+        <ModalChangeStatus :isOpen="modalChangeStatus" @close="modalChangeStatus = false" :order="selectedOrder"></ModalChangeStatus>
   </NuxtLayout>
 </template>

@@ -28,5 +28,33 @@ export const useOrderStore = defineStore('order', {
                 console.error('Error fetching orders:', error);
             }
         },
+        async changeStatus(id, status) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const response = await axios.put(`${config.public.apiBase}/order/status/${id}`,{
+                    status: status
+                });
+                this.fetchOrders();
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        },
+        async setPage(page) {
+            this.page = page;
+            await this.fetchOrders();
+        },
+        async deleteOrder(id) {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                return await axios.delete(`${config.public.apiBase}/order/${id}`);
+            } catch (error) {
+                const toast = useToastStore();
+                toast.showToast(error.response.data.messages[0].message, 'error');
+            }
+        },
     },
 });
