@@ -1,15 +1,24 @@
 <script setup>
+import { Icon } from '@iconify/vue';
 import { useAuthStore } from '~~/stores/auth';
 const authStore = useAuthStore();
 const logout = async () => {
   await authStore.logout();
   navigateTo('/login');
 }
+const props = defineProps({
+  isOpen: {
+    type: Boolean,
+    required: true
+  }
+});
 </script>
 <template>
     <div class="navbar bg-base-100 rounded-lg">
         <div class="navbar-start">
-
+            <button @click="$emit('toggleSidebar')" class="btn btn-square btn-ghost">
+                <Icon v-if="isOpen" icon="ic:baseline-menu-open" class="h-6 w-6" /> <Icon v-else icon="ic:baseline-menu" class="h-6 w-6" />
+            </button>
         </div>
         <div class="navbar-center">
         </div>

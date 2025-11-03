@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "eslint": "^9.20.1",
     "nuxt": "^3.14.1592",
+    "nuxt-charts": "^1.0.2",
     "pinia": "^2.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
     "vue": "latest",

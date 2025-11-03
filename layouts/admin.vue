@@ -2,23 +2,20 @@
 definePageMeta({
   middleware: 'auth', // Middleware untuk otentikasi
 });
-import { Icon } from '@iconify/vue';
-const isDropdownOpen = ref(false);
-function toggleDropdown() {
-  isDropdownOpen.value = !isDropdownOpen.value;
+const isSidebarOpen = ref(true);
+
+function toggleSidebar() {
+  isSidebarOpen.value = !isSidebarOpen.value;
 }
-
-
-
 </script>
 
 <template>
-  <div class="drawer lg:drawer-open">
+  <div class="drawer md:drawer-open">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col bg-base-200">
       <!-- Page content here -->
       <div class="w-full space-y-4">
-        <Navbar />
+        <Navbar @toggle-sidebar="toggleSidebar" :is-open="isSidebarOpen" />
         <div class="p-4">
           <slot />
         </div>
@@ -27,7 +24,7 @@ function toggleDropdown() {
       <ToastAlert />
     
     </div>
-    <Sidebar />
+    <Sidebar :is-open="isSidebarOpen" />
   </div>
 
 </template>

@@ -1,51 +1,66 @@
 <script setup>
 import { Icon } from '@iconify/vue';
 const isDropdownOpen = ref(false);
-function toggleDropdown() {
+
+const props = defineProps({
+  isOpen: {
+    type: Boolean,
+    required: true
+  }
+});
+const emit = defineEmits(['update:isOpen']);
+const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
-}
+   if (isDropdownOpen.value === true) {
+    emit('update:isOpen', true)
+  }
+};
+
 </script>
 
 <template>
-  <div class="drawer-side">
+  <div class="drawer-side ">
       <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-
-      <ul class="menu bg-slate-600 text-base-content min-h-full w-80 ">
-        <div class=" px-3 py-3 ">
-          <h2 class="text-2xl font-bold text-left text-slate-100">Laundry App</h2>
+      <ul class="menu overflow-y-auto bg-slate-600 text-base-content min-h-full " :class="{ 'w-20': !props.isOpen, 'w-80': props.isOpen }">
+        <div class="px-3 py-3 mb-4 border-b border-slate-400 flex items-center space-x-2">
+          <h2 class="text-2xl font-bold text-left text-slate-100 " :class="{ 'hidden': !props.isOpen }">Laundry App</h2>
+          <h2 class="text-2xl font-bold text-left text-slate-100 " :class="{ 'hidden': props.isOpen }">LA</h2>
         </div>
         <!-- Sidebar content here -->
         <li>
           <nuxt-link to="/dashboard" class="text-slate-100 card p-4 font-bold flex-row"
             :class="{ 'active': $route.path === '/dashboard' }">
-            <Icon icon="material-symbols:dashboard" class="mr-2 h-5 w-5" /> Dashboard
+            <Icon icon="material-symbols:dashboard" class="mr-2 h-5 w-5" /> 
+            <span :class="{ 'hidden': !props.isOpen }">Dashboard</span>
           </nuxt-link>
         </li>
         <li><nuxt-link to="/orders" class="text-slate-100 card p-4 font-bold flex-row"
             :class="{ 'active': $route.path === '/orders' }">
-            <Icon icon="ic:round-shopping-basket" class="mr-2 h-5 w-5" /> Orders
+            <Icon icon="ic:round-shopping-basket" class="mr-2 h-5 w-5" /> 
+            <span :class="{ 'hidden': !props.isOpen }">Orders</span>
           </nuxt-link>
         </li>
         <li>
           <nuxt-link to="/order-history" class="card p-4 text-slate-100 font-bold flex-row"
             :class="{ 'active': $route.path === '/order-history' }">
             <Icon icon="material-symbols:order-approve" class="mr-2 h-5 w-5" />
-            Order History
+            <span :class="{ 'hidden': !props.isOpen }">Order History</span>
           </nuxt-link>
         </li>
         <!-- <div class="py-4"><label class="px-3 text-xs text-slate-300 uppercase dark:text-gray-400">master</label></div> -->
         <li>
           <div class="card p-4 text-slate-100 font-bold flex flex-row justify-between cursor-pointer"
+            :class="{ 'active': $route.path.startsWith('/master') }"
             @click="toggleDropdown">
             <div class="flex space-x-2">
               <Icon icon="ic:baseline-menu-book" class="mr-4 h-5 w-5" />
-              Master
+              <div :class="{ 'hidden': !props.isOpen }">Master</div>
             </div>
-            <Icon :icon="isDropdownOpen ? 'ic:baseline-keyboard-arrow-up' : 'ic:baseline-keyboard-arrow-down'" class="h-5 w-5" />
+            <Icon :class="{ 'hidden': !props.isOpen }" :icon="isDropdownOpen ? 'ic:baseline-keyboard-arrow-up' : 'ic:baseline-keyboard-arrow-down'" class="h-5 w-5 " />
           </div>
           <!-- Submenu Master -->
           <!-- open sub menu if master url -->
-          <ul v-if="$route.path.startsWith('/master') ? !isDropdownOpen : isDropdownOpen" class="menu ml-6">
+          <ul v-if="$route.path.startsWith('/master') && props.isOpen ? !isDropdownOpen : isDropdownOpen"  class="menu hidden lg:block ml-6">
             <li >
               <nuxt-link to="/master/services" class="card p-4 text-slate-100 font-bold"
                 :class="{ 'active ': $route.path.startsWith('/master/services') }">
