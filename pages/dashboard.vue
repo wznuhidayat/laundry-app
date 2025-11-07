@@ -1,16 +1,26 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useOrderStore } from '#build/imports';
+
 definePageMeta({
   layout: 'admin'
 })
-const data = [
-  { date: '2025-10-28', totalOrder: 15 },
-  { date: '2025-10-29', totalOrder: 22 },
-  { date: '2025-10-30', totalOrder: 18 },
-  { date: '2025-10-31', totalOrder: 25 },
-  { date: '2025-11-01', totalOrder: 20 },
-  { date: '2025-11-02', totalOrder: 27 },
-  { date: '2025-11-03', totalOrder: 30 },
-]
+const orderStore = useOrderStore();
+await useFetch(async () => {
+  await Promise.all([
+    orderStore.fetchSummary(),
+    orderStore.fetchLastWeekSummary(),
+  ]);
+});
+const summary = computed(() => orderStore.summary);
+const chartData = computed(() => (
+  orderStore.lastWeekTotals.length
+    ? orderStore.lastWeekTotals.map((item) => ({
+        date: item.date,
+        totalOrder: item.totalOrders ?? 0,
+      }))
+    : []
+));
 
 const categories = {
   totalOrder: {
@@ -18,8 +28,10 @@ const categories = {
     color: '#3b82f6',
   },
 }
-
-const xFormatter = (i: number) => data[i].date
+const xFormatter = (index: number) => chartData.value[index]?.date ?? '';
+const yFormatter = (value: number) => (
+  Number.isInteger(value) ? `${value}` : ''
+);
 
 </script>
 
@@ -29,7 +41,7 @@ const xFormatter = (i: number) => data[i].date
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="card flex flex-row justify-between bg-white shadow-sm p-6">
         <div class="flex items-center">
-          <h3 class="text-4xl font-bold ">1,245</h3>
+          <h3 class="text-4xl font-bold ">{{ summary.totalOrders }}</h3>
         </div>
         <div>
           <h3 class="text-xl font-semibold">Order</h3>
@@ -39,7 +51,7 @@ const xFormatter = (i: number) => data[i].date
       </div>
       <div class="card flex flex-row justify-between bg-white shadow-sm p-6">
         <div class="flex items-center">
-          <h3 class="text-4xl font-bold ">578</h3>
+          <h3 class="text-4xl font-bold ">{{ summary.totalOrdersCompleted }}</h3>
         </div>
         <div>
           <h3 class="text-xl font-semibold">Order Finished</h3>
@@ -48,7 +60,7 @@ const xFormatter = (i: number) => data[i].date
       </div>
       <div class="card flex flex-row justify-between bg-white shadow-sm p-6">
         <div class="flex items-center">
-          <h3 class="text-4xl font-bold ">246</h3>
+          <h3 class="text-4xl font-bold ">{{ summary.totalDeliveries }}</h3>
         </div>
         <div>
           <h3 class="text-xl font-semibold">Send Delivery</h3>
@@ -56,14 +68,16 @@ const xFormatter = (i: number) => data[i].date
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-1 gap-6">
       <div class="card bg-white shadow-sm p-6 mt-6">
        <LineChart
-          :data="data"
+          :data="chartData"
           :categories="categories"
+          :xFormatter="xFormatter"
+          :yFormatter="yFormatter"
           :height="300"
           xLabel="Date"
-          yLabel="Total Order"
+          yLabel="Orders"
         />
     </div>
     </div>

@@ -7,6 +7,12 @@ export const useOrderStore = defineStore('order', {
         page: 1,
         perPage: 10,
         total: 0,
+        summary: {
+            totalOrders: 0,
+            totalOrdersCompleted: 0,
+            totalDeliveries: 0,
+        },
+        lastWeekTotals: [] as Array<{ date: string; totalOrders: number }>,
     }),
     actions: {
         async fetchOrders() {
@@ -54,6 +60,32 @@ export const useOrderStore = defineStore('order', {
             } catch (error) {
                 const toast = useToastStore();
                 toast.showToast(error.response.data.messages[0].message, 'error');
+            }
+        },
+        async fetchSummary() {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const response = await axios.get(`${config.public.apiBase}/order/summary`);
+                this.summary = {
+                    totalOrders: response.data.totalOrders ?? 0,
+                    totalOrdersCompleted: response.data.totalOrdersCompleted ?? 0,
+                    totalDeliveries: response.data.totalDeliveries ?? 0,
+                };
+            } catch (error) {
+                console.error('Error fetching order summary:', error);
+            }
+        },
+        async fetchLastWeekSummary() {
+            try {
+                const config = useRuntimeConfig();
+                const authStore = useAuthStore();
+                axios.defaults.headers.common.Authorization = `Bearer ${authStore.token}`;
+                const response = await axios.get(`${config.public.apiBase}/order/summary/last-week`);
+                this.lastWeekTotals = Array.isArray(response.data.dailyTotals) ? response.data.dailyTotals : [];
+            } catch (error) {
+                console.error('Error fetching last week summary:', error);
             }
         },
     },
